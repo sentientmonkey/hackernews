@@ -2,17 +2,17 @@ package main
 
 import (
 	"fmt"
-	"hackernews/hackernews"
+	"hackernews/news"
 )
 
 func main() {
-	ids, err := hackernews.TopStories()
+	ids, err := news.TopStories()
 	if err != nil {
 		fmt.Printf("Error: %s\n", err)
 		return
 	}
 	for i, id := range ids {
-		story, err := hackernews.GetStory(id)
+		story, err := news.GetStory(id)
 		if err != nil {
 			fmt.Printf("Error: %s\n", err)
 		} else {

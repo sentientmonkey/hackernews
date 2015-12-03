@@ -29,3 +29,7 @@ func (t *Timestamp) UnmarshalJSON(b []byte) error {
 func (t *Timestamp) String() string {
 	return time.Time(*t).String()
 }
+
+func (t *Timestamp) Format(f string) string {
+	return time.Time(*t).Format(f)
+}

@@ -8,8 +8,8 @@ import (
 
 const baseUrl = "https://hacker-news.firebaseio.com/v0/"
 
-func TopStories() ([]int, error) {
-	var stories []int
+func TopStories() ([]int64, error) {
+	var stories []int64
 
 	resp, err := http.Get(baseUrl + "topstories.json")
 	if err != nil {

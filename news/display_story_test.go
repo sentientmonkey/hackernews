@@ -1,20 +1,19 @@
-package news_test
+package news
 
 import (
-	"hackernews/news"
 	"testing"
 	"time"
 )
 
 var (
-	story        *news.Story
-	displayStory *news.DisplayStory
+	story        *Story
+	displayStory *DisplayStory
 )
 
 func init() {
-	story = &news.Story{
+	story = &Story{
 		Comments: []int{1, 2, 3},
-		Time:     news.Timestamp(time.Date(2016, 3, 20, 16, 30, 0, 0, time.UTC)),
+		Time:     Timestamp(time.Date(2016, 3, 20, 16, 30, 0, 0, time.UTC)),
 	}
 	displayStory = story.ToDisplayStory(1)
 }

@@ -33,7 +33,3 @@ func (t *Timestamp) String() string {
 func (t *Timestamp) Format(f string) string {
 	return time.Time(*t).Format(f)
 }
-
-func TimestampFormat(t *Timestamp, f string) string {
-	return t.Format(f)
-}

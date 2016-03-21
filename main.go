@@ -8,38 +8,38 @@ import (
 	"os"
 )
 
-var (
-	numberOfArticles int
-	urlsOnly         bool
-)
-
-func init() {
-	flag.IntVar(&numberOfArticles, "n", 10, "number of articles")
-	flag.BoolVar(&urlsOnly, "u", false, "only show urls")
-}
-
-var templateMap map[string]*template.Template
-
 const storyTemplateContent = `{{.Number | printf "%2d"}}. {{.Title}} ({{.Url}})
     {{.Score}} points by {{.By}} {{.FormattedTime}} | {{.CommentCount}} comments
 `
 const urlTemplateContent = `{{.Url}}
 `
 
-func main() {
-	flag.Parse()
-
-	if err := registerTemplates(); err != nil {
-		log.Println(err)
-		return
-	}
-
-	showStories()
+type App struct {
+	numberOfArticles int
+	urlsOnly         bool
+	templateMap      map[string]*template.Template
 }
 
-func registerTemplates() error {
-	templateMap = make(map[string]*template.Template)
+func NewApp() *App {
+	return &App{
+		templateMap: make(map[string]*template.Template),
+	}
+}
 
+func (app *App) Run() {
+	app.parseFlags()
+	app.registerTemplates()
+	app.showStories()
+}
+
+func (app *App) parseFlags() {
+	flag.IntVar(&app.numberOfArticles, "n", 10, "number of articles")
+	flag.BoolVar(&app.urlsOnly, "u", false, "only show urls")
+
+	flag.Parse()
+}
+
+func (app *App) registerTemplates() error {
 	contentMap := map[string]string{
 		"story": storyTemplateContent,
 		"url":   urlTemplateContent,
@@ -48,16 +48,16 @@ func registerTemplates() error {
 	for name, content := range contentMap {
 		tmpl, err := template.New(name).Parse(content)
 		if err != nil {
-			return err
+			log.Fatal(err)
 		}
 
-		templateMap[name] = tmpl
+		app.templateMap[name] = tmpl
 	}
 
 	return nil
 }
 
-func showStories() {
+func (app *App) showStories() {
 	ids, err := news.TopStories()
 	if err != nil {
 		log.Println(err)
@@ -71,9 +71,9 @@ func showStories() {
 			return
 		}
 
-		tmpl := templateMap["story"]
-		if urlsOnly {
-			tmpl = templateMap["url"]
+		tmpl := app.templateMap["story"]
+		if app.urlsOnly {
+			tmpl = app.templateMap["url"]
 		}
 
 		if err = tmpl.Execute(os.Stdout, story.ToDisplayStory(i+1)); err != nil {
@@ -81,8 +81,12 @@ func showStories() {
 			return
 		}
 
-		if i+1 >= numberOfArticles {
+		if i+1 >= app.numberOfArticles {
 			break
 		}
 	}
+}
+
+func main() {
+	NewApp().Run()
 }

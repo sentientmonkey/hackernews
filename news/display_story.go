@@ -1,5 +1,7 @@
 package news
 
+// Wraps a Story with additional information (like story number)
+// As well as provide helper functions for formatting to a template.
 type DisplayStory struct {
 	*Story
 	Number int

@@ -3,11 +3,12 @@ package main
 import (
 	"flag"
 	"fmt"
-	"hackernews/news"
 	"html/template"
 	"log"
 	"os"
 	"time"
+
+	"github.com/sentientmonkey/hackernews/news"
 )
 
 const storyTemplateContent = `{{.Number | printf "%2d"}}. {{.Title}} ({{.Url}})
